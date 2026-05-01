@@ -22,11 +22,9 @@
       --shadow: 0 6px 32px rgba(0,0,0,0.09);
     }
 
-    html { scroll-behavior: smooth; }
-
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
-      background: var(--gray-1);
+      background: #F5F5F2;
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
@@ -35,13 +33,14 @@
       padding: 24px 16px;
       overflow-x: hidden;
       position: relative;
+      transition: background 1.2s ease;
     }
 
     /* ── Card ── */
     .card {
       background: var(--white);
       border-radius: 28px;
-      padding: 40px 36px 32px;
+      padding: 36px 32px 28px;
       width: 100%;
       max-width: 460px;
       box-shadow: var(--shadow);
@@ -50,152 +49,19 @@
     }
 
     /* ── Header ── */
-    .header {
-      text-align: center;
-      margin-bottom: 36px;
+    .header { text-align: center; margin-bottom: 28px; }
+    .header .label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray-3); margin-bottom: 6px;
     }
-    .header .title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gray-3);
-      margin-bottom: 6px;
-    }
-    .header .subtitle {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--black);
-    }
-
-    /* ── Input ── */
-    .input-wrap {
-      background: var(--gray-1);
-      border-radius: var(--radius);
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 32px;
-      border: 1.5px solid transparent;
-      transition: border-color 0.2s;
-    }
-    .input-wrap:focus-within {
-      border-color: var(--gold);
-    }
-    .input-wrap label {
-      font-size: 0.8rem;
-      color: var(--gray-3);
-      white-space: nowrap;
-      font-weight: 600;
-    }
-    .input-wrap input {
-      flex: 1;
-      min-width: 0;
-      border: none;
-      background: transparent;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--black);
-      text-align: right;
-      outline: none;
-      font-variant-numeric: tabular-nums;
-    }
-    .input-wrap input::placeholder { color: var(--gray-2); font-weight: 600; }
-    .input-wrap .unit {
-      font-size: 0.8rem;
-      color: var(--gray-3);
-      white-space: nowrap;
-      font-weight: 600;
-    }
-
-    /* ── Earnings ── */
-    .earnings-block {
-      text-align: center;
-      margin-bottom: 8px;
-      padding: 8px 0 4px;
-    }
-    .earnings-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray-3);
-      margin-bottom: 10px;
-    }
-    .earnings-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 4px;
-      line-height: 1;
-    }
-    .currency {
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: var(--gold-dark);
-      line-height: 1;
-    }
-    .amount {
-      font-size: 4rem;
-      font-weight: 900;
-      color: var(--black);
-      font-variant-numeric: tabular-nums;
-      transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1);
-      letter-spacing: -0.02em;
-    }
-    .amount.pop { transform: scale(1.07); }
-    .decimal-part {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--gray-3);
-      font-variant-numeric: tabular-nums;
-      align-self: flex-end;
-      padding-bottom: 6px;
-    }
-
-    /* ── Time ── */
-    .time-display {
-      text-align: center;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--gray-3);
-      letter-spacing: 0.12em;
-      font-variant-numeric: tabular-nums;
-      margin-bottom: 4px;
-    }
-
-    /* ── Per-second rate ── */
-    .rate {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--gray-3);
-      font-weight: 500;
-      height: 18px;
-      margin-bottom: 28px;
-      transition: opacity 0.3s;
-    }
-    .rate strong {
-      color: var(--gold-dark);
-      font-weight: 800;
-    }
-
-    /* ── Running indicator ── */
+    .header .subtitle { font-size: 1rem; font-weight: 600; color: var(--black); }
     .status-dot {
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--gray-2);
-      margin-right: 6px;
-      vertical-align: middle;
-      position: relative;
-      top: -1px;
-      transition: background 0.3s;
+      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gray-2); margin-right: 6px; vertical-align: middle;
+      position: relative; top: -1px; transition: background 0.3s;
     }
     .status-dot.running {
       background: #4CAF50;
-      box-shadow: 0 0 0 0 rgba(76,175,80,0.5);
       animation: pulse-dot 1.4s infinite;
     }
     @keyframes pulse-dot {
@@ -204,129 +70,232 @@
       100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
     }
 
+    /* ── Input wrap ── */
+    .input-wrap {
+      background: var(--gray-1);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+      border: 1.5px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .input-wrap:focus-within { border-color: var(--gold); }
+    .input-wrap label { font-size: 0.78rem; color: var(--gray-3); white-space: nowrap; font-weight: 600; }
+    .input-wrap input {
+      flex: 1; min-width: 0; border: none; background: transparent;
+      font-size: 1.2rem; font-weight: 800; color: var(--black);
+      text-align: right; outline: none; font-variant-numeric: tabular-nums;
+    }
+    .input-wrap input::placeholder { color: var(--gray-2); font-weight: 600; }
+    .input-wrap .unit { font-size: 0.78rem; color: var(--gray-3); white-space: nowrap; font-weight: 600; }
+
+    /* ── Input row (rate + goal side by side) ── */
+    .input-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 16px;
+    }
+    .input-row .input-wrap { flex-direction: column; align-items: stretch; gap: 4px; padding: 10px 12px; }
+    .input-row .input-wrap label { font-size: 0.68rem; }
+    .input-row .input-wrap input { font-size: 1.05rem; text-align: left; }
+    .input-row .input-wrap .unit { font-size: 0.68rem; }
+
+    /* ── Earnings ── */
+    .earnings-block {
+      text-align: center; margin-bottom: 6px; padding: 8px 0 4px;
+      cursor: pointer; user-select: none;
+      border-radius: 12px;
+      transition: background 0.15s;
+    }
+    .earnings-block:active { background: var(--gray-1); }
+    .earnings-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gray-3); margin-bottom: 10px;
+    }
+    .earnings-row {
+      display: flex; align-items: baseline; justify-content: center;
+      gap: 4px; line-height: 1;
+    }
+    .currency { font-size: 1.8rem; font-weight: 900; color: var(--gold-dark); line-height: 1; }
+    .amount {
+      font-size: 4rem; font-weight: 900; color: var(--black);
+      font-variant-numeric: tabular-nums;
+      transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1);
+      letter-spacing: -0.02em;
+    }
+    .amount.pop { transform: scale(1.07); }
+    .decimal-part {
+      font-size: 1.8rem; font-weight: 700; color: var(--gray-3);
+      font-variant-numeric: tabular-nums; align-self: flex-end; padding-bottom: 6px;
+    }
+    .click-hint {
+      font-size: 0.68rem; color: var(--gray-3); text-align: center;
+      margin-top: 4px; opacity: 0; transition: opacity 0.5s; height: 16px;
+    }
+    .click-hint.show { opacity: 1; }
+
+    /* ── Time + rate ── */
+    .time-display {
+      text-align: center; font-size: 0.95rem; font-weight: 700;
+      color: var(--gray-3); letter-spacing: 0.12em;
+      font-variant-numeric: tabular-nums; margin-bottom: 4px;
+      margin-top: 8px;
+    }
+    .per-sec {
+      text-align: center; font-size: 0.75rem; color: var(--gray-3);
+      font-weight: 500; height: 18px; margin-bottom: 12px;
+    }
+    .per-sec strong { color: var(--gold-dark); font-weight: 800; }
+
+    /* ── Progress bar ── */
+    .progress-section { margin-bottom: 14px; visibility: hidden; }
+    .progress-section.visible { visibility: visible; }
+    .progress-track {
+      background: var(--gray-2); border-radius: 99px;
+      height: 8px; overflow: hidden; margin-bottom: 6px;
+    }
+    .progress-fill {
+      height: 100%; background: var(--gold); border-radius: 99px;
+      width: 0%; transition: width 0.5s ease;
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      font-size: 0.7rem; color: var(--gray-3); font-weight: 600;
+    }
+    .progress-pct { color: var(--gold-dark); font-weight: 800; }
+
     /* ── Buttons ── */
     .btn-group {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 8px; margin-bottom: 16px;
     }
     .btn {
-      border: none;
-      border-radius: 12px;
-      padding: 15px 10px;
-      font-size: 0.9rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.1s, opacity 0.2s, background 0.2s;
-      letter-spacing: 0.03em;
-      position: relative;
-      overflow: hidden;
+      border: none; border-radius: 12px; padding: 14px 8px;
+      font-size: 0.82rem; font-weight: 800; cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+      letter-spacing: 0.02em;
     }
-    .btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0);
-      transition: background 0.15s;
-    }
-    .btn:hover:not(:disabled)::after { background: rgba(255,255,255,0.15); }
     .btn:active:not(:disabled) { transform: scale(0.96); }
     .btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
     .btn-start { background: var(--gold); color: var(--black); }
     .btn-stop  { background: var(--black); color: var(--gold); }
     .btn-reset { background: var(--gray-1); color: var(--gray-4); }
-
-    /* ── Quote (in-card) ── */
+    /* ── Quote ── */
     .quote-block {
-      border-top: 1.5px solid var(--gray-2);
-      margin-top: 4px;
-      padding-top: 16px;
-      text-align: center;
-      min-height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-top: 1.5px solid var(--gray-2); padding-top: 16px;
+      text-align: center; height: 56px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
     }
     .quote-text {
-      font-size: 0.78rem;
-      color: var(--gray-4);
-      font-style: italic;
-      font-weight: 500;
-      line-height: 1.55;
-      opacity: 1;
-      transition: opacity 0.45s ease;
+      font-size: 0.78rem; color: var(--gray-4);
+      font-style: italic; font-weight: 500; line-height: 1.55;
+      opacity: 1; transition: opacity 0.45s ease;
     }
     .quote-text.fade { opacity: 0; }
     .quote-author {
-      display: block;
-      font-style: normal;
-      font-weight: 700;
-      color: var(--gray-3);
-      margin-top: 4px;
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
+      display: block; font-style: normal; font-weight: 700;
+      color: var(--gray-3); margin-top: 4px;
+      font-size: 0.72rem; letter-spacing: 0.04em;
     }
 
     /* ── Footer ── */
-    .footer {
-      margin-top: 12px;
-      font-size: 0.7rem;
-      color: var(--gray-3);
-      text-align: center;
-    }
+    .footer { margin-top: 16px; font-size: 0.7rem; color: var(--gray-3); text-align: center; }
 
-    /* ── Coin animation ── */
+    /* ── Coin layers ── */
+    #coinLayer {
+      position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden;
+    }
     .coin {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      user-select: none;
-      animation: coin-fall var(--dur, 1.3s) cubic-bezier(0.4, 0, 1, 1) forwards;
-      font-size: var(--size, 1.4rem);
-      will-change: transform, opacity;
+      position: absolute; user-select: none;
+      font-size: var(--size, 1.4rem); will-change: transform, opacity;
+    }
+    .coin.falling {
+      animation: coin-fall var(--dur, 1.2s) cubic-bezier(0.3, 0, 0.7, 1) forwards;
     }
     @keyframes coin-fall {
-      0%   { transform: translateY(0) rotate(0deg)   scale(1);    opacity: 1; }
-      50%  { opacity: 1; }
-      100% { transform: translateY(var(--travel, 100px)) rotate(var(--spin, 270deg)) scale(0.5); opacity: 0; }
+      0%   { transform: translateY(0) rotate(0deg)          scale(1);    opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(var(--travel,200px)) rotate(var(--spin,270deg)) scale(0.85); opacity: 0.95; }
+    }
+    .coin.settled {
+      animation: coin-settle 0.18s ease-out;
+    }
+    @keyframes coin-settle { 0% { transform: scale(1.4); } 100% { transform: scale(1); } }
+
+    /* ── Milestone popup ── */
+    .milestone-popup {
+      position: fixed; top: 44%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.75);
+      background: var(--white);
+      border: 3px solid var(--gold);
+      border-radius: 20px; padding: 20px 28px;
+      text-align: center; z-index: 300;
+      pointer-events: none; opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.14); min-width: 220px;
+    }
+    .milestone-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .ms-amount { font-size: 1.8rem; font-weight: 900; color: var(--gold-dark); font-variant-numeric: tabular-nums; }
+    .ms-msg    { font-size: 0.95rem; font-weight: 700; color: var(--black); margin-top: 4px; }
+
+    /* ── Confetti ── */
+    .confetti-piece {
+      position: fixed; pointer-events: none; z-index: 200;
+      width: 9px; height: 9px; border-radius: 2px;
+      animation: confetti-fly var(--cdur, 2s) ease-in forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes confetti-fly {
+      0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--cx,0px), var(--cy,400px)) rotate(var(--cr,720deg)); opacity: 0; }
     }
 
     /* ── Responsive ── */
     @media (max-width: 380px) {
-      .card { padding: 28px 20px 24px; }
+      .card { padding: 24px 16px 20px; }
       .amount { font-size: 3.2rem; }
       .currency, .decimal-part { font-size: 1.4rem; }
-      .btn { padding: 13px 6px; font-size: 0.82rem; }
+      .btn-group { grid-template-columns: 1fr 1fr; }
+      .btn-start { grid-column: 1 / -1; }
     }
   </style>
 </head>
 <body>
 
+<!-- Coin layer (falling + settled) -->
+<div id="coinLayer"></div>
+
+<!-- Milestone popup -->
+<div class="milestone-popup" id="milestonePopup">
+  <div class="ms-amount" id="msAmount"></div>
+  <div class="ms-msg"    id="msMsg"></div>
+</div>
+
+
+<!-- Main card -->
 <div class="card">
   <div class="header">
-    <div class="title">WAGE CLOCK</div>
-    <div class="subtitle">
-      <span class="status-dot" id="statusDot"></span>지금 이 순간의 가치
+    <div class="label">WAGE CLOCK</div>
+    <div class="subtitle"><span class="status-dot" id="statusDot"></span>지금 이 순간의 가치</div>
+  </div>
+
+  <!-- Rate + Goal -->
+  <div class="input-row">
+    <div class="input-wrap">
+      <label for="hourlyRate">시급</label>
+      <input type="number" id="hourlyRate" value="10320" min="0" step="100" inputmode="numeric" />
+      <span class="unit">원 / 시간</span>
+    </div>
+    <div class="input-wrap">
+      <label for="goalAmount">목표</label>
+      <input type="number" id="goalAmount" placeholder="선택 사항" min="0" step="1000" inputmode="numeric" />
+      <span class="unit">원 달성</span>
     </div>
   </div>
 
-  <div class="input-wrap">
-    <label for="hourlyRate">시급</label>
-    <input
-      type="number"
-      id="hourlyRate"
-      placeholder="10320"
-      value="10320"
-      min="0"
-      step="100"
-      inputmode="numeric"
-    />
-    <span class="unit">원 / 시간</span>
-  </div>
-
-  <div class="earnings-block">
+  <!-- Earnings -->
+  <div class="earnings-block" id="earningsBlock">
     <div class="earnings-label">지금까지 번 돈</div>
     <div class="earnings-row">
       <span class="currency">₩</span>
@@ -334,16 +303,30 @@
       <span class="decimal-part" id="amountDec">.00</span>
     </div>
   </div>
+  <p class="click-hint" id="clickHint">탭하면 동전이 나와요</p>
 
   <div class="time-display" id="timeDisplay">00:00:00</div>
-  <div class="rate" id="rateDisplay">&nbsp;</div>
+  <div class="per-sec" id="perSecDisplay">&nbsp;</div>
 
+  <!-- Progress -->
+  <div class="progress-section" id="progressSection">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-meta">
+      <span id="progressLabel">₩0 / ₩0</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+  </div>
+
+  <!-- Buttons -->
   <div class="btn-group">
     <button class="btn btn-start" id="btnStart" onclick="startTimer()">시작하기</button>
     <button class="btn btn-stop"  id="btnStop"  onclick="stopTimer()"  disabled>정지</button>
     <button class="btn btn-reset" id="btnReset" onclick="resetTimer()">초기화</button>
   </div>
 
+  <!-- Quote -->
   <div class="quote-block">
     <p class="quote-text" id="quoteText"></p>
   </div>
@@ -352,209 +335,316 @@
 <p class="footer">시간은 돈이다 — 정말로.</p>
 
 <script>
-  // ── State ──────────────────────────────────────────────────
-  let elapsed    = 0;       // ms banked before current run
-  let startAt    = null;    // Date.now() when last started
+  // ── State ─────────────────────────────────────────────────────
+  let elapsed    = 0;
+  let startAt    = null;
   let running    = false;
   let rafId      = null;
   let lastCoinAt = 0;
-  let coinBudget = 0;       // fractional coin debt
+  let coinBudget = 0;
+  let lastInt    = -1;
+  let goalAchieved   = false;
+  let shownMilestones = new Set();
+  let milestoneTimer  = null;
 
+  // Coin pile
+  const PILE_BUCKETS = 32;
+  const pileH        = new Array(PILE_BUCKETS).fill(0);
+  const MAX_PILE     = 90;
+  const settledCoins = [];
 
-  // ── Helpers ─────────────────────────────────────────────────
-  function getRate()    { return parseFloat(document.getElementById('hourlyRate').value) || 0; }
-  function getElapsed() { return elapsed + (running ? Date.now() - startAt : 0); }
-  function getEarnings(){ return getElapsed() / 3600000 * getRate(); }
+  // ── Helpers ───────────────────────────────────────────────────
+  const $  = id => document.getElementById(id);
+  const getRate    = () => parseFloat($('hourlyRate').value) || 0;
+  const getGoal    = () => parseFloat($('goalAmount').value)  || 0;
+  const getElapsed = () => elapsed + (running ? Date.now() - startAt : 0);
+  const getEarnings= () => getElapsed() / 3600000 * getRate();
+  const fmt        = n  => Math.floor(n).toLocaleString('ko-KR');
 
-  function fmt(n) {
-    return Math.floor(n).toLocaleString('ko-KR');
+  // ── Warmth on rate change ─────────────────────────────────────
+  $('hourlyRate').addEventListener('input', () => {
+    updateWarmth(parseFloat($('hourlyRate').value) || 0);
+  });
+  updateWarmth(10320);
+
+  // ── Background warmth ─────────────────────────────────────────
+  // cool #F5F5F2 → warm #FFE49A as rate 0 → 100000
+  function updateWarmth(rate) {
+    const t = Math.min(1, rate / 100000);
+    const r = Math.round(245 + 10 * t);
+    const g = Math.round(245 - 17 * t);
+    const b = Math.round(242 - 88 * t);
+    document.body.style.background = `rgb(${r},${g},${b})`;
   }
 
-  // ── Display ─────────────────────────────────────────────────
-  let lastInt = -1;
+  // ── Main tick ─────────────────────────────────────────────────
   function tick() {
     const ms   = getElapsed();
     const earn = getEarnings();
-    const intPart  = Math.floor(earn);
-    const decPart  = (earn - intPart).toFixed(2).slice(1); // ".xx"
+    const intPart = Math.floor(earn);
+    const decPart = (earn - intPart).toFixed(2).slice(1);
 
     // Time
     const h = String(Math.floor(ms / 3600000)).padStart(2,'0');
     const m = String(Math.floor(ms % 3600000 / 60000)).padStart(2,'0');
     const s = String(Math.floor(ms % 60000  / 1000)).padStart(2,'0');
-    document.getElementById('timeDisplay').textContent = `${h}:${m}:${s}`;
+    $('timeDisplay').textContent = `${h}:${m}:${s}`;
 
     // Amount
     if (intPart !== lastInt) {
-      const el = document.getElementById('amountInt');
+      const el = $('amountInt');
       el.textContent = fmt(intPart);
       el.classList.remove('pop');
       requestAnimationFrame(() => el.classList.add('pop'));
       lastInt = intPart;
     }
-    document.getElementById('amountDec').textContent = decPart;
+    $('amountDec').textContent = decPart;
 
-    // Rate
+    // Per-sec
     const rate = getRate();
     if (rate > 0) {
-      const perSec = (rate / 3600).toFixed(2);
-      document.getElementById('rateDisplay').innerHTML = `초당 <strong>${perSec}원</strong>씩 증가 중`;
+      $('perSecDisplay').innerHTML = `초당 <strong>${(rate / 3600).toFixed(2)}원</strong>씩 증가 중`;
     }
 
-    // Coins
-    spawnCoins(earn);
+    // Progress bar
+    const goal = getGoal();
+    if (goal > 0) {
+      const pct = Math.min(100, earn / goal * 100);
+      $('progressSection').classList.add('visible');
+      $('progressFill').style.width   = pct.toFixed(1) + '%';
+      $('progressLabel').textContent  = `₩${fmt(earn)} / ₩${fmt(goal)}`;
+      $('progressPct').textContent    = pct.toFixed(1) + '%';
+      if (pct >= 100 && !goalAchieved) { goalAchieved = true; triggerConfetti(); }
+    } else {
+      $('progressSection').classList.remove('visible');
+    }
+
+    // Milestones
+    checkMilestones(earn);
+
+    // Auto coins
+    autoCoins(rate);
 
     if (running) rafId = requestAnimationFrame(tick);
   }
 
-  // ── Coins ────────────────────────────────────────────────────
-  const COIN_GLYPHS = ['🪙','🪙','🪙','💰'];
+  // ── Milestones ────────────────────────────────────────────────
+  const MILESTONES = [
+    { amt: 1000,   msg: '삼각김밥 하나 완성!' },
+    { amt: 3000,   msg: '편의점 커피 한 캔' },
+    { amt: 5000,   msg: '아메리카노 한 잔' },
+    { amt: 10000,  msg: '치킨값 향해 달리는 중' },
+    { amt: 30000,  msg: '오늘 저녁은 내가 쏜다' },
+    { amt: 50000,  msg: '맛집 예약 가능 구간' },
+    { amt: 100000, msg: '10만원 돌파! 이제 뭐든 가능' },
+    { amt: 500000, msg: '50만원… 이거 진짜 일한 거 맞죠?' },
+  ];
 
-  function spawnCoins(earn) {
-    const now = Date.now();
-    if (now - lastCoinAt < 800) return;
-    lastCoinAt = now;
-
-    const rate = getRate();
-    if (rate <= 0) return;
-
-    // How many coins per second proportional to rate (1 coin/sec at base 10000)
-    const coinsPerSec = Math.max(0.5, Math.min(4, rate / 10000));
-    const dt = 0.8; // seconds since last spawn check
-    coinBudget += coinsPerSec * dt;
-
-    while (coinBudget >= 1) {
-      spawnOneCoin();
-      coinBudget -= 1;
+  function checkMilestones(earn) {
+    for (const ms of MILESTONES) {
+      if (earn >= ms.amt && !shownMilestones.has(ms.amt)) {
+        shownMilestones.add(ms.amt);
+        showMilestone(ms.amt, ms.msg);
+        break;
+      }
     }
   }
 
-  function spawnOneCoin() {
-    const el   = document.createElement('div');
-    el.classList.add('coin');
-    el.textContent = COIN_GLYPHS[Math.floor(Math.random() * COIN_GLYPHS.length)];
-
-    const size   = 1.1 + Math.random() * 0.8;
-    const travel = 70 + Math.random() * 90;
-    const spin   = 180 + Math.floor(Math.random() * 360);
-    const dur    = 1.0 + Math.random() * 0.6;
-    const x      = Math.random() * Math.max(60, window.innerWidth - 60);
-    const y      = Math.random() * 60 + 10;
-
-    el.style.setProperty('--size',   size + 'rem');
-    el.style.setProperty('--travel', travel + 'px');
-    el.style.setProperty('--spin',   spin + 'deg');
-    el.style.setProperty('--dur',    dur + 's');
-    el.style.left = x + 'px';
-    el.style.top  = y + 'px';
-
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), (dur + 0.1) * 1000);
+  function showMilestone(amt, msg) {
+    clearTimeout(milestoneTimer);
+    $('msAmount').textContent = `₩${fmt(amt)}`;
+    $('msMsg').textContent    = msg;
+    const popup = $('milestonePopup');
+    popup.classList.add('show');
+    milestoneTimer = setTimeout(() => popup.classList.remove('show'), 3000);
   }
 
-  // ── Timer controls ───────────────────────────────────────────
+  // ── Confetti ──────────────────────────────────────────────────
+  const CONFETTI_COLORS = ['#F5C518','#FF6B6B','#4ECDC4','#45B7D1','#96E6A1','#F7DC6F','#BB8FCE'];
+
+  function triggerConfetti() {
+    for (let i = 0; i < 90; i++) {
+      setTimeout(spawnConfettiPiece, Math.random() * 600);
+    }
+  }
+
+  function spawnConfettiPiece() {
+    const el = document.createElement('div');
+    el.classList.add('confetti-piece');
+    el.style.background = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+    el.style.left = (25 + Math.random() * 50) + 'vw';
+    el.style.top  = (25 + Math.random() * 30) + 'vh';
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 160 + Math.random() * 280;
+    el.style.setProperty('--cx',   (Math.cos(angle) * dist) + 'px');
+    el.style.setProperty('--cy',   (Math.sin(angle) * dist + 180) + 'px');
+    el.style.setProperty('--cr',   (Math.random() * 720 - 360) + 'deg');
+    const dur = 1.4 + Math.random() * 1.4;
+    el.style.setProperty('--cdur', dur + 's');
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 0.2) * 1000);
+  }
+
+  // ── Coins ─────────────────────────────────────────────────────
+  const GLYPHS = ['🪙','🪙','🪙','💰'];
+
+  function autoCoins(rate) {
+    const now = Date.now();
+    if (now - lastCoinAt < 700) return;
+    lastCoinAt = now;
+    if (rate <= 0) return;
+    coinBudget += Math.max(0.4, Math.min(5, rate / 10000 * 1.3)) * 0.7;
+    while (coinBudget >= 1) { spawnCoin(false); coinBudget -= 1; }
+  }
+
+  function spawnCoin(fromClick, cx, cy) {
+    const glyph  = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+    const size   = 1.0 + Math.random() * 0.7;
+    const bucket = Math.floor(Math.random() * PILE_BUCKETS);
+    const colW   = window.innerWidth / PILE_BUCKETS;
+    const startX = fromClick
+      ? cx + (Math.random() - 0.5) * 50
+      : bucket * colW + Math.random() * colW * 0.8;
+    const startY = fromClick ? cy : -20 - Math.random() * 40;
+
+    const curPile  = Math.min(pileH[bucket], MAX_PILE);
+    const cardBottom = document.querySelector('.card').getBoundingClientRect().bottom;
+    const landY    = cardBottom - 10 - curPile;
+    const travel   = Math.max(60, landY - startY);
+    const dur      = fromClick ? (0.5 + Math.random() * 0.3) : (0.9 + Math.random() * 0.5);
+
+    const el = document.createElement('div');
+    el.classList.add('coin', 'falling');
+    el.textContent = glyph;
+    el.style.setProperty('--size',   size + 'rem');
+    el.style.setProperty('--travel', travel + 'px');
+    el.style.setProperty('--spin',   (180 + Math.random() * 360) + 'deg');
+    el.style.setProperty('--dur',    dur + 's');
+    el.style.left = startX + 'px';
+    el.style.top  = startY + 'px';
+    $('coinLayer').appendChild(el);
+
+    setTimeout(() => {
+      el.remove();
+      const ph = Math.min(pileH[bucket], MAX_PILE);
+      const settled = document.createElement('div');
+      settled.classList.add('coin', 'settled');
+      settled.textContent = glyph;
+      settled.style.setProperty('--size', (size * 0.82) + 'rem');
+      settled.style.position = 'absolute';
+      settled.style.left     = startX + 'px';
+      settled.style.bottom   = (ph + 4) + 'px';
+      pileH[bucket] = Math.min(pileH[bucket] + 13, MAX_PILE + 10);
+      $('coinLayer').appendChild(settled);
+      settledCoins.push(settled);
+      setTimeout(() => {
+        settled.style.transition = 'opacity 0.6s ease';
+        settled.style.opacity = '0';
+        setTimeout(() => {
+          settled.remove();
+          const idx = settledCoins.indexOf(settled);
+          if (idx !== -1) settledCoins.splice(idx, 1);
+          pileH[bucket] = Math.max(0, pileH[bucket] - 13);
+        }, 600);
+      }, 10000);
+    }, dur * 1000);
+  }
+
+  // Tap on earnings = burst of coins
+  $('earningsBlock').addEventListener('click', e => {
+    if (!running) return;
+    const cx = e.clientX, cy = e.clientY;
+    for (let i = 0; i < 6; i++) setTimeout(() => spawnCoin(true, cx, cy), i * 55);
+  });
+
+  // Show hint on start
+  function showClickHint() {
+    $('clickHint').classList.add('show');
+    setTimeout(() => $('clickHint').classList.remove('show'), 4000);
+  }
+
+  // ── Timer controls ─────────────────────────────────────────────
   function startTimer() {
     const rate = getRate();
-    if (rate <= 0) {
-      const inp = document.getElementById('hourlyRate');
-      inp.focus();
-      const wrap = inp.closest('.input-wrap');
+    if (!rate) {
+      const wrap = rateInput.closest('.input-wrap');
+      rateInput.focus();
       wrap.style.borderColor = 'var(--gold)';
-      wrap.style.background = 'var(--gold-bg)';
-      setTimeout(() => {
-        wrap.style.borderColor = '';
-        wrap.style.background  = '';
-      }, 1200);
+      wrap.style.background  = 'var(--gold-bg)';
+      setTimeout(() => { wrap.style.borderColor = ''; wrap.style.background = ''; }, 1200);
       return;
     }
     if (running) return;
-
-    running = true;
-    startAt = Date.now();
-    lastCoinAt = 0;
-
-    document.getElementById('btnStart').disabled = true;
-    document.getElementById('btnStop').disabled  = false;
-    document.getElementById('hourlyRate').disabled = true;
-    document.getElementById('statusDot').classList.add('running');
-
+    running = true; startAt = Date.now(); lastCoinAt = 0; goalAchieved = false;
+    $('btnStart').disabled = true;
+    $('btnStop').disabled  = false;
+    $('hourlyRate').disabled = true;
+    $('statusDot').classList.add('running');
+    showClickHint();
     rafId = requestAnimationFrame(tick);
   }
 
   function stopTimer() {
     if (!running) return;
-    running = false;
-    elapsed += Date.now() - startAt;
+    running = false; elapsed += Date.now() - startAt;
     cancelAnimationFrame(rafId);
-
-    document.getElementById('btnStart').disabled = false;
-    document.getElementById('btnStop').disabled  = true;
-    document.getElementById('hourlyRate').disabled = false;
-    document.getElementById('statusDot').classList.remove('running');
+    $('btnStart').disabled = false;
+    $('btnStop').disabled  = true;
+    $('hourlyRate').disabled = false;
+    $('statusDot').classList.remove('running');
   }
 
   function resetTimer() {
     stopTimer();
-    elapsed  = 0;
-    lastInt  = -1;
-    coinBudget = 0;
-
-    document.getElementById('amountInt').textContent  = '0';
-    document.getElementById('amountDec').textContent  = '.00';
-    document.getElementById('timeDisplay').textContent = '00:00:00';
-    document.getElementById('rateDisplay').innerHTML  = '&nbsp;';
+    elapsed = 0; lastInt = -1; coinBudget = 0;
+    goalAchieved = false; shownMilestones.clear(); pileH.fill(0);
+    settledCoins.forEach(c => c.remove()); settledCoins.length = 0;
+    $('amountInt').textContent   = '0';
+    $('amountDec').textContent   = '.00';
+    $('timeDisplay').textContent = '00:00:00';
+    $('perSecDisplay').innerHTML = '&nbsp;';
+    $('progressSection').classList.remove('visible');
+    $('milestonePopup').classList.remove('show');
   }
 
-  // Dismiss pop animation
-  document.getElementById('amountInt').addEventListener('animationend', () => {
-    document.getElementById('amountInt').classList.remove('pop');
-  });
-  document.getElementById('amountInt').addEventListener('transitionend', () => {
-    document.getElementById('amountInt').classList.remove('pop');
-  });
-
-  // Allow Enter to start
-  document.getElementById('hourlyRate').addEventListener('keydown', e => {
-    if (e.key === 'Enter') startTimer();
-  });
-
-  // ── Quotes ───────────────────────────────────────────────────
+  // ── Quotes ────────────────────────────────────────────────────
   const QUOTES = [
-    { text: '시간은 돈이다.',                                     author: '벤저민 프랭클린' },
-    { text: '잃어버린 시간은 다시 찾을 수 없다.',                 author: '벤저민 프랭클린' },
-    { text: '오늘 할 수 있는 일을 내일로 미루지 마라.',           author: '벤저민 프랭클린' },
-    { text: '부자가 되고 싶다면, 돈을 모으는 것뿐만 아니라 시간도 모아라.', author: '헨리 데이비드 소로' },
-    { text: '열심히 일하지 않고 꿈만 꾸는 것은 그냥 자는 것이다.', author: '이 시대의 지혜' },
-    { text: '오늘 낭비한 시간은 내일 죽고 싶어질 시간이다.',      author: '토마스 에디슨' },
-    { text: '기회는 노력하는 자에게 온다.',                       author: '루키우스 안나이우스 세네카' },
-    { text: '지금 이 순간이 남은 생애의 첫 번째 날이다.',         author: '아비 호프만' },
-    { text: '성공은 준비가 기회를 만날 때 일어난다.',             author: '세네카' },
-    { text: '당신이 시간을 사랑한다면, 시간을 낭비하지 마라.',    author: '벤저민 프랭클린' },
-    { text: '작은 물방울이 모여 큰 강을 이룬다.',                 author: '공자' },
-    { text: '천 리 길도 한 걸음부터.',                            author: '노자' },
+    { text: '시간은 돈이다.',               author: '벤저민 프랭클린' },
+    { text: '잃어버린 시간은 돌아오지 않는다.', author: '벤저민 프랭클린' },
+    { text: '오늘 일을 내일로 미루지 마라.', author: '벤저민 프랭클린' },
+    { text: '시간도 함께 모아라.',           author: '헨리 데이비드 소로' },
+    { text: '낭비한 시간은 아쉬움이 된다.', author: '토마스 에디슨' },
+    { text: '기회는 노력하는 자에게 온다.', author: '세네카' },
+    { text: '지금 이 순간이 시작이다.',     author: '아비 호프만' },
+    { text: '준비된 자에게 기회가 온다.',   author: '세네카' },
+    { text: '시간을 사랑하면 낭비 말라.',   author: '벤저민 프랭클린' },
+    { text: '작은 물방울이 강을 이룬다.',   author: '공자' },
+    { text: '천 리 길도 한 걸음부터.',     author: '노자' },
+    { text: '꿈만 꾸는 것은 자는 것이다.', author: '이 시대의 지혜' },
   ];
 
-  let quoteIndex = Math.floor(Math.random() * QUOTES.length);
+  let qi = Math.floor(Math.random() * QUOTES.length);
 
-  function showQuote() {
-    const el = document.getElementById('quoteText');
+  function nextQuote() {
+    const el = $('quoteText');
     el.classList.add('fade');
     setTimeout(() => {
-      quoteIndex = (quoteIndex + 1) % QUOTES.length;
-      const q = QUOTES[quoteIndex];
+      qi = (qi + 1) % QUOTES.length;
+      const q = QUOTES[qi];
       el.innerHTML = `"${q.text}"<span class="quote-author">— ${q.author}</span>`;
       el.classList.remove('fade');
-    }, 500);
+    }, 450);
   }
 
-  // Show first quote immediately
-  (function () {
-    const q = QUOTES[quoteIndex];
-    document.getElementById('quoteText').innerHTML =
-      `"${q.text}"<span class="quote-author">— ${q.author}</span>`;
+  (function() {
+    const q = QUOTES[qi];
+    $('quoteText').innerHTML = `"${q.text}"<span class="quote-author">— ${q.author}</span>`;
   })();
+  setInterval(nextQuote, 4000);
 
-  setInterval(showQuote, 4000);
+  // ── Misc ──────────────────────────────────────────────────────
+  $('amountInt').addEventListener('transitionend', () => $('amountInt').classList.remove('pop'));
+  $('hourlyRate').addEventListener('keydown', e => { if (e.key === 'Enter') startTimer(); });
 </script>
 </body>
 </html>
