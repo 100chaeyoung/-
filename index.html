@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>지금 이 순간의 가치</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #F5C518;
+      --gold-dark: #C9A000;
+      --gold-bg: #FFFBEA;
+      --gold-border: #FFE082;
+      --black: #111111;
+      --gray-1: #F5F5F2;
+      --gray-2: #E8E8E4;
+      --gray-3: #AAAAAA;
+      --gray-4: #777777;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 6px 32px rgba(0,0,0,0.09);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+      background: var(--gray-1);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border-radius: 28px;
+      padding: 40px 36px 32px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .header .title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 6px;
+    }
+    .header .subtitle {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    /* ── Input ── */
+    .input-wrap {
+      background: var(--gray-1);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      border: 1.5px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .input-wrap:focus-within {
+      border-color: var(--gold);
+    }
+    .input-wrap label {
+      font-size: 0.8rem;
+      color: var(--gray-3);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .input-wrap input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--black);
+      text-align: right;
+      outline: none;
+      font-variant-numeric: tabular-nums;
+    }
+    .input-wrap input::placeholder { color: var(--gray-2); font-weight: 600; }
+    .input-wrap .unit {
+      font-size: 0.8rem;
+      color: var(--gray-3);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    /* ── Earnings ── */
+    .earnings-block {
+      text-align: center;
+      margin-bottom: 8px;
+      padding: 8px 0 4px;
+    }
+    .earnings-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 10px;
+    }
+    .earnings-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      line-height: 1;
+    }
+    .currency {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--gold-dark);
+      line-height: 1;
+    }
+    .amount {
+      font-size: 4rem;
+      font-weight: 900;
+      color: var(--black);
+      font-variant-numeric: tabular-nums;
+      transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1);
+      letter-spacing: -0.02em;
+    }
+    .amount.pop { transform: scale(1.07); }
+    .decimal-part {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gray-3);
+      font-variant-numeric: tabular-nums;
+      align-self: flex-end;
+      padding-bottom: 6px;
+    }
+
+    /* ── Time ── */
+    .time-display {
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--gray-3);
+      letter-spacing: 0.12em;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 4px;
+    }
+
+    /* ── Per-second rate ── */
+    .rate {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--gray-3);
+      font-weight: 500;
+      height: 18px;
+      margin-bottom: 28px;
+      transition: opacity 0.3s;
+    }
+    .rate strong {
+      color: var(--gold-dark);
+      font-weight: 800;
+    }
+
+    /* ── Running indicator ── */
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gray-2);
+      margin-right: 6px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+      transition: background 0.3s;
+    }
+    .status-dot.running {
+      background: #4CAF50;
+      box-shadow: 0 0 0 0 rgba(76,175,80,0.5);
+      animation: pulse-dot 1.4s infinite;
+    }
+    @keyframes pulse-dot {
+      0%   { box-shadow: 0 0 0 0 rgba(76,175,80,0.5); }
+      70%  { box-shadow: 0 0 0 6px rgba(76,175,80,0); }
+      100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
+    }
+
+    /* ── Buttons ── */
+    .btn-group {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 15px 10px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s, background 0.2s;
+      letter-spacing: 0.03em;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background 0.15s;
+    }
+    .btn:hover:not(:disabled)::after { background: rgba(255,255,255,0.15); }
+    .btn:active:not(:disabled) { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .btn-start { background: var(--gold); color: var(--black); }
+    .btn-stop  { background: var(--black); color: var(--gold); }
+    .btn-reset { background: var(--gray-1); color: var(--gray-4); }
+
+    /* ── Quote (in-card) ── */
+    .quote-block {
+      border-top: 1.5px solid var(--gray-2);
+      margin-top: 4px;
+      padding-top: 16px;
+      text-align: center;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .quote-text {
+      font-size: 0.78rem;
+      color: var(--gray-4);
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.55;
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+    .quote-text.fade { opacity: 0; }
+    .quote-author {
+      display: block;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--gray-3);
+      margin-top: 4px;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 12px;
+      font-size: 0.7rem;
+      color: var(--gray-3);
+      text-align: center;
+    }
+
+    /* ── Coin animation ── */
+    .coin {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      user-select: none;
+      animation: coin-fall var(--dur, 1.3s) cubic-bezier(0.4, 0, 1, 1) forwards;
+      font-size: var(--size, 1.4rem);
+      will-change: transform, opacity;
+    }
+    @keyframes coin-fall {
+      0%   { transform: translateY(0) rotate(0deg)   scale(1);    opacity: 1; }
+      50%  { opacity: 1; }
+      100% { transform: translateY(var(--travel, 100px)) rotate(var(--spin, 270deg)) scale(0.5); opacity: 0; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 380px) {
+      .card { padding: 28px 20px 24px; }
+      .amount { font-size: 3.2rem; }
+      .currency, .decimal-part { font-size: 1.4rem; }
+      .btn { padding: 13px 6px; font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <div class="title">WAGE CLOCK</div>
+    <div class="subtitle">
+      <span class="status-dot" id="statusDot"></span>지금 이 순간의 가치
+    </div>
+  </div>
+
+  <div class="input-wrap">
+    <label for="hourlyRate">시급</label>
+    <input
+      type="number"
+      id="hourlyRate"
+      placeholder="10320"
+      value="10320"
+      min="0"
+      step="100"
+      inputmode="numeric"
+    />
+    <span class="unit">원 / 시간</span>
+  </div>
+
+  <div class="earnings-block">
+    <div class="earnings-label">지금까지 번 돈</div>
+    <div class="earnings-row">
+      <span class="currency">₩</span>
+      <span class="amount" id="amountInt">0</span>
+      <span class="decimal-part" id="amountDec">.00</span>
+    </div>
+  </div>
+
+  <div class="time-display" id="timeDisplay">00:00:00</div>
+  <div class="rate" id="rateDisplay">&nbsp;</div>
+
+  <div class="btn-group">
+    <button class="btn btn-start" id="btnStart" onclick="startTimer()">시작하기</button>
+    <button class="btn btn-stop"  id="btnStop"  onclick="stopTimer()"  disabled>정지</button>
+    <button class="btn btn-reset" id="btnReset" onclick="resetTimer()">초기화</button>
+  </div>
+
+  <div class="quote-block">
+    <p class="quote-text" id="quoteText"></p>
+  </div>
+</div>
+
+<p class="footer">시간은 돈이다 — 정말로.</p>
+
+<script>
+  // ── State ──────────────────────────────────────────────────
+  let elapsed    = 0;       // ms banked before current run
+  let startAt    = null;    // Date.now() when last started
+  let running    = false;
+  let rafId      = null;
+  let lastCoinAt = 0;
+  let coinBudget = 0;       // fractional coin debt
+
+
+  // ── Helpers ─────────────────────────────────────────────────
+  function getRate()    { return parseFloat(document.getElementById('hourlyRate').value) || 0; }
+  function getElapsed() { return elapsed + (running ? Date.now() - startAt : 0); }
+  function getEarnings(){ return getElapsed() / 3600000 * getRate(); }
+
+  function fmt(n) {
+    return Math.floor(n).toLocaleString('ko-KR');
+  }
+
+  // ── Display ─────────────────────────────────────────────────
+  let lastInt = -1;
+  function tick() {
+    const ms   = getElapsed();
+    const earn = getEarnings();
+    const intPart  = Math.floor(earn);
+    const decPart  = (earn - intPart).toFixed(2).slice(1); // ".xx"
+
+    // Time
+    const h = String(Math.floor(ms / 3600000)).padStart(2,'0');
+    const m = String(Math.floor(ms % 3600000 / 60000)).padStart(2,'0');
+    const s = String(Math.floor(ms % 60000  / 1000)).padStart(2,'0');
+    document.getElementById('timeDisplay').textContent = `${h}:${m}:${s}`;
+
+    // Amount
+    if (intPart !== lastInt) {
+      const el = document.getElementById('amountInt');
+      el.textContent = fmt(intPart);
+      el.classList.remove('pop');
+      requestAnimationFrame(() => el.classList.add('pop'));
+      lastInt = intPart;
+    }
+    document.getElementById('amountDec').textContent = decPart;
+
+    // Rate
+    const rate = getRate();
+    if (rate > 0) {
+      const perSec = (rate / 3600).toFixed(2);
+      document.getElementById('rateDisplay').innerHTML = `초당 <strong>${perSec}원</strong>씩 증가 중`;
+    }
+
+    // Coins
+    spawnCoins(earn);
+
+    if (running) rafId = requestAnimationFrame(tick);
+  }
+
+  // ── Coins ────────────────────────────────────────────────────
+  const COIN_GLYPHS = ['🪙','🪙','🪙','💰'];
+
+  function spawnCoins(earn) {
+    const now = Date.now();
+    if (now - lastCoinAt < 800) return;
+    lastCoinAt = now;
+
+    const rate = getRate();
+    if (rate <= 0) return;
+
+    // How many coins per second proportional to rate (1 coin/sec at base 10000)
+    const coinsPerSec = Math.max(0.5, Math.min(4, rate / 10000));
+    const dt = 0.8; // seconds since last spawn check
+    coinBudget += coinsPerSec * dt;
+
+    while (coinBudget >= 1) {
+      spawnOneCoin();
+      coinBudget -= 1;
+    }
+  }
+
+  function spawnOneCoin() {
+    const el   = document.createElement('div');
+    el.classList.add('coin');
+    el.textContent = COIN_GLYPHS[Math.floor(Math.random() * COIN_GLYPHS.length)];
+
+    const size   = 1.1 + Math.random() * 0.8;
+    const travel = 70 + Math.random() * 90;
+    const spin   = 180 + Math.floor(Math.random() * 360);
+    const dur    = 1.0 + Math.random() * 0.6;
+    const x      = Math.random() * Math.max(60, window.innerWidth - 60);
+    const y      = Math.random() * 60 + 10;
+
+    el.style.setProperty('--size',   size + 'rem');
+    el.style.setProperty('--travel', travel + 'px');
+    el.style.setProperty('--spin',   spin + 'deg');
+    el.style.setProperty('--dur',    dur + 's');
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 0.1) * 1000);
+  }
+
+  // ── Timer controls ───────────────────────────────────────────
+  function startTimer() {
+    const rate = getRate();
+    if (rate <= 0) {
+      const inp = document.getElementById('hourlyRate');
+      inp.focus();
+      const wrap = inp.closest('.input-wrap');
+      wrap.style.borderColor = 'var(--gold)';
+      wrap.style.background = 'var(--gold-bg)';
+      setTimeout(() => {
+        wrap.style.borderColor = '';
+        wrap.style.background  = '';
+      }, 1200);
+      return;
+    }
+    if (running) return;
+
+    running = true;
+    startAt = Date.now();
+    lastCoinAt = 0;
+
+    document.getElementById('btnStart').disabled = true;
+    document.getElementById('btnStop').disabled  = false;
+    document.getElementById('hourlyRate').disabled = true;
+    document.getElementById('statusDot').classList.add('running');
+
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function stopTimer() {
+    if (!running) return;
+    running = false;
+    elapsed += Date.now() - startAt;
+    cancelAnimationFrame(rafId);
+
+    document.getElementById('btnStart').disabled = false;
+    document.getElementById('btnStop').disabled  = true;
+    document.getElementById('hourlyRate').disabled = false;
+    document.getElementById('statusDot').classList.remove('running');
+  }
+
+  function resetTimer() {
+    stopTimer();
+    elapsed  = 0;
+    lastInt  = -1;
+    coinBudget = 0;
+
+    document.getElementById('amountInt').textContent  = '0';
+    document.getElementById('amountDec').textContent  = '.00';
+    document.getElementById('timeDisplay').textContent = '00:00:00';
+    document.getElementById('rateDisplay').innerHTML  = '&nbsp;';
+  }
+
+  // Dismiss pop animation
+  document.getElementById('amountInt').addEventListener('animationend', () => {
+    document.getElementById('amountInt').classList.remove('pop');
+  });
+  document.getElementById('amountInt').addEventListener('transitionend', () => {
+    document.getElementById('amountInt').classList.remove('pop');
+  });
+
+  // Allow Enter to start
+  document.getElementById('hourlyRate').addEventListener('keydown', e => {
+    if (e.key === 'Enter') startTimer();
+  });
+
+  // ── Quotes ───────────────────────────────────────────────────
+  const QUOTES = [
+    { text: '시간은 돈이다.',                                     author: '벤저민 프랭클린' },
+    { text: '잃어버린 시간은 다시 찾을 수 없다.',                 author: '벤저민 프랭클린' },
+    { text: '오늘 할 수 있는 일을 내일로 미루지 마라.',           author: '벤저민 프랭클린' },
+    { text: '부자가 되고 싶다면, 돈을 모으는 것뿐만 아니라 시간도 모아라.', author: '헨리 데이비드 소로' },
+    { text: '열심히 일하지 않고 꿈만 꾸는 것은 그냥 자는 것이다.', author: '이 시대의 지혜' },
+    { text: '오늘 낭비한 시간은 내일 죽고 싶어질 시간이다.',      author: '토마스 에디슨' },
+    { text: '기회는 노력하는 자에게 온다.',                       author: '루키우스 안나이우스 세네카' },
+    { text: '지금 이 순간이 남은 생애의 첫 번째 날이다.',         author: '아비 호프만' },
+    { text: '성공은 준비가 기회를 만날 때 일어난다.',             author: '세네카' },
+    { text: '당신이 시간을 사랑한다면, 시간을 낭비하지 마라.',    author: '벤저민 프랭클린' },
+    { text: '작은 물방울이 모여 큰 강을 이룬다.',                 author: '공자' },
+    { text: '천 리 길도 한 걸음부터.',                            author: '노자' },
+  ];
+
+  let quoteIndex = Math.floor(Math.random() * QUOTES.length);
+
+  function showQuote() {
+    const el = document.getElementById('quoteText');
+    el.classList.add('fade');
+    setTimeout(() => {
+      quoteIndex = (quoteIndex + 1) % QUOTES.length;
+      const q = QUOTES[quoteIndex];
+      el.innerHTML = `"${q.text}"<span class="quote-author">— ${q.author}</span>`;
+      el.classList.remove('fade');
+    }, 500);
+  }
+
+  // Show first quote immediately
+  (function () {
+    const q = QUOTES[quoteIndex];
+    document.getElementById('quoteText').innerHTML =
+      `"${q.text}"<span class="quote-author">— ${q.author}</span>`;
+  })();
+
+  setInterval(showQuote, 4000);
+</script>
+</body>
+</html>
